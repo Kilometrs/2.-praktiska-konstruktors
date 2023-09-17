@@ -4,6 +4,9 @@ import datetime
 import time
 import yaml
 
+# Kods vietām pārāk garš (ekrāna ziņā)
+# bet vispārēji ir ļoti lasāms, pat neprasās komentēt, manuprāt
+
 from datetime import datetime
 print('Asteroid processing service')
 
@@ -19,7 +22,7 @@ dt = datetime.now()
 request_date = str(dt.year) + "-" + str(dt.month).zfill(2) + "-" + str(dt.day).zfill(2)  
 print("Generated today's date: " + str(request_date))
 
-
+# pieprasījuma debugs -> printē lai redzētu
 print("Request url: " + str(nasa_api_url + "rest/v1/feed?start_date=" + request_date + "&end_date=" + request_date + "&api_key=" + nasa_api_key))
 r = requests.get(nasa_api_url + "rest/v1/feed?start_date=" + request_date + "&end_date=" + request_date + "&api_key=" + nasa_api_key)
 
@@ -29,6 +32,7 @@ print("Response content: " + str(r.text))
 
 if r.status_code == 200:
 
+	# ja ir response, tad šitais sapako JSON
 	json_data = json.loads(r.text)
 
 	ast_safe = []
@@ -90,6 +94,7 @@ if r.status_code == 200:
 					
 					# Adding asteroid data to the corresponding array
 					if tmp_ast_hazardous == True:
+						# KĀPĒC VIENĀ RINDĀ?
 						ast_hazardous.append([tmp_ast_name, tmp_ast_nasa_jpl_url, tmp_ast_diam_min, tmp_ast_diam_max, tmp_ast_close_appr_ts, tmp_ast_close_appr_dt_utc, tmp_ast_close_appr_dt, tmp_ast_speed, tmp_ast_miss_dist])
 					else:
 						ast_safe.append([tmp_ast_name, tmp_ast_nasa_jpl_url, tmp_ast_diam_min, tmp_ast_diam_max, tmp_ast_close_appr_ts, tmp_ast_close_appr_dt_utc, tmp_ast_close_appr_dt, tmp_ast_speed, tmp_ast_miss_dist])
@@ -101,11 +106,13 @@ if r.status_code == 200:
 
 	if len(ast_hazardous) > 0:
 
+		# šitais sakārto laikus augošā secībā
 		ast_hazardous.sort(key = lambda x: x[4], reverse=False)
 
 		print("Today's possible apocalypse (asteroid impact on earth) times:")
 		for asteroid in ast_hazardous:
 			print(str(asteroid[6]) + " " + str(asteroid[0]) + " " + " | more info: " + str(asteroid[1]))
+
 
 		ast_hazardous.sort(key = lambda x: x[8], reverse=False)
 		print("Closest passing distance is for: " + str(ast_hazardous[0][0]) + " at: " + str(int(ast_hazardous[0][8])) + " km | more info: " + str(ast_hazardous[0][1]))

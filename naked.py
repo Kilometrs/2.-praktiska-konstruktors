@@ -3,9 +3,12 @@ import json
 import datetime
 import time
 import yaml
+from configparser import ConfigParser
 
 # Kods vietām pārāk garš (ekrāna ziņā)
 # bet vispārēji ir ļoti lasāms, pat neprasās komentēt, manuprāt
+
+# vajadzētu salikt visu funkcijās/metodēs
 
 from datetime import datetime
 print('Asteroid processing service')
@@ -13,9 +16,31 @@ print('Asteroid processing service')
 # Initiating and reading config values
 print('Loading configuration from file')
 
-# 
-nasa_api_key = "???"
-nasa_api_url = "https://api.nasa.gov/neo/"
+try:
+	config = ConfigParser()
+	config.read('config.ini')
+
+	nasa_api_key = config.get('nasa', 'api_key')
+	nasa_api_url = config.get('nasa', 'api_url')
+
+	# gadījumā, ja gribam atgriest db
+	# mysql_config_mysql_host = config.get('mysql_config', 'mysql_host')
+	# mysql_config_mysql_db = config.get('mysql_config', 'mysql_db')
+	# mysql_config_mysql_user = config.get('mysql_config', 'mysql_user')
+	# mysql_config_mysql_pass = config.get('mysql_config', 'mysql_pass')
+
+except:
+	print("<E1> Could not fetch api data from config file!")
+	print("Ending code...")
+	exit()
+# 	logger.exception('')
+# logger.info('DONE')
+print("Config read successfuly!")
+
+
+# # Vecais api key thing
+# nasa_api_key = "9WAh5oPdgMGqvAFTchJbw9ROpu2pcGJG01KxVkNu"
+# nasa_api_url = "https://api.nasa.gov/neo/"
 
 # Getting todays date
 dt = datetime.now()
@@ -27,8 +52,9 @@ print("Request url: " + str(nasa_api_url + "rest/v1/feed?start_date=" + request_
 r = requests.get(nasa_api_url + "rest/v1/feed?start_date=" + request_date + "&end_date=" + request_date + "&api_key=" + nasa_api_key)
 
 print("Response status code: " + str(r.status_code))
-print("Response headers: " + str(r.headers))
-print("Response content: " + str(r.text))
+# izkomentēts, jo nav nepieciešams - strādā kā debug
+# print("Response headers: " + str(r.headers))
+# print("Response content: " + str(r.text))
 
 if r.status_code == 200:
 

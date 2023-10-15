@@ -1,3 +1,5 @@
+import logging
+import logging.config
 import requests
 import json
 import datetime
@@ -15,6 +17,23 @@ print('Asteroid processing service')
 
 # Initiating and reading config values
 print('Loading configuration from file')
+
+try:
+	# Loading logging configuration
+	print("DEBUG 1")
+	print("Jaunais no linux intialized")
+	with open('./log_worker.yaml', 'r') as stream:
+		log_config = yaml.safe_load(stream)
+		print("DEBUG 3")
+	logging.config.dictConfig(log_config)
+	print("DEBUG 4")
+
+	# Creating logger
+	logger = logging.getLogger('root')
+except Exception as e: 
+	print("Could not initialize log config! LOGGING IS NOW DISABLED!!")
+	print(e)
+
 
 try:
 	config = ConfigParser()

@@ -21,6 +21,7 @@ print('Loading configuration from file')
 try:
 	# Loading logging configuration
 	print("DEBUG 1")
+	print("Jaunais no linux intialized")
 	with open('./log_worker.yaml', 'r') as stream:
 		log_config = yaml.safe_load(stream)
 		print("DEBUG 3")

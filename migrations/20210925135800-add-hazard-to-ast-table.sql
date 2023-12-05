@@ -1,1 +1,0 @@
-ALTER TABLE ast_daily ADD COLUMN hazardous int(1) NOT NULL;
